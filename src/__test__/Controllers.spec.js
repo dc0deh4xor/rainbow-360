@@ -87,7 +87,20 @@ describe("Controllers", () => {
     });
 
     describe("GET /org/:adminId/:orgSlug/members/:memberId", () => {
-      // TODO: Implement with `getOrgMember`
+      it("should throw if org not exists", async () => {
+        await expect(getRequest("/org/foo/bar/members/baz")).rejects.toThrow(
+          'Org "bar" is not found.'
+        );
+      });
+
+      it.only("should throw if org member not exists", async () => {
+        await expect(
+          postRequest("/org/foo", { name: "bar" })
+        ).resolves.toBeTruthy();
+        await expect(getRequest("/org/foo/bar/members/baz")).rejects.toThrow(
+          'Member "baz" not found in org "bar".'
+        );
+      });
     });
 
     describe("DELETE /org/:adminId/:orgSlug/members/:memberId", () => {

@@ -1,15 +1,20 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const axios = require("axios");
 
 const app = express();
-const server = require("http").Server(app);
 
 const {
   getOrg,
   createOrg,
   removeOrg,
   listOrgs,
+  getOrgMember,
+  addOrgMember,
+  removeOrgMember,
+  listOrgTeams,
+  listOrgMembers,
+  listOrgTeamMembers,
+  updateOrgMemberTeams,
   flushTestRepo
 } = require("./Services");
 
@@ -54,17 +59,19 @@ app.post("/org/:adminId", async (req, res, next) => {
   }
 });
 
-app.post("/org/members/:orgId", async (req, res) => {});
+app.get("/org/:adminId/:orgSlug/members/:memberId", async (req, res, next) => {
+  const adminId = req.params.adminId;
+  const orgSlug = req.params.orgSlug;
+  const memberId = req.params.memberId;
 
-app.get("/org/members/:orgId", async (req, res) => {});
+  try {
+    const member = await getOrgMember(adminId, orgSlug, memberId);
 
-app.get("/org/members/:adminId/:orgSlug", async (req, res) => {});
-
-app.post("/org/members/:orgId/:userId", async (req, res) => {});
-
-app.put("/org/members/:orgId/:userId", async (req, res) => {});
-
-app.delete("/org/members/:orgId/:userId", async (req, res) => {});
+    res.json(member);
+  } catch (e) {
+    next(e);
+  }
+});
 
 app.listen(8080, httpServerError => {
   if (httpServerError) {
