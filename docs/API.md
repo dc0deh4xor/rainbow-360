@@ -10,7 +10,7 @@ Response: `{ [orgSlug: string]: { name: string } }`
 
 #### Create Organization
 
-Request: `POST /org/:adminId` -> `{ name: string }`
+Request: `POST /org/:adminId` ▶︎ `{ name: string }`
 
 Response: `{ name: string }`
 
@@ -26,6 +26,8 @@ Request: `DELETE /org/:adminId/:orgSlug`
 
 Response: `""`
 
+
+
 ### Organization Teams
 
 #### List Organization Teams
@@ -39,3 +41,32 @@ Response: `{ [teamSlug: string]: { [userId: string]: true } }`
 Request: `GET /org/:adminId/:orgSlug/teams`
 
 Response: `{ [teamSlug: string]: true }`
+
+
+
+### Organization Members
+
+#### Add Organization Member
+
+Request: `POST /org/:adminId/:orgSlug/members` ▶︎ `{ id: string }`
+
+Response: `{ id: string }`
+
+#### List Organization Members
+
+Request: `GET /org/:adminId/:orgSlug/members`
+
+Response: `{ id: string }`
+
+#### Get Organization Member
+
+Request: `GET /org/:adminId/:orgSlug/members/:memberId`
+
+Response: `{ id: string }`
+
+#### Remove Organization Member
+
+Request: `DELETE /org/:adminId/:orgSlug/members/:memberId`
+
+Response: `""`
+
