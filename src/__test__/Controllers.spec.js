@@ -69,17 +69,105 @@ describe("Controllers", () => {
 
   describe("/org/:adminId/:orgSlug/teams", () => {
     describe("GET /org/:adminId/:orgSlug/teams", () => {
-      // TODO: Implement with `listOrgTeams`
+      it("should throw if org not exists", async () => {
+        await expect(getRequest("/org/foo/bar/teams")).rejects.toThrow(
+          'Org "bar" is not found.'
+        );
+      });
+
+      it("should always return plain object", async () => {
+        await expect(
+          postRequest("/org/foo", { name: "bar" })
+        ).resolves.toBeTruthy();
+
+        await expect(getRequest("/org/foo/bar/teams")).resolves.toEqual({});
+      });
     });
 
     describe("GET /org/:adminId/:orgSlug/teams/:teamSlug", () => {
-      // TODO: Implement with `listOrgTeamMembers`
+      it("should throw if org not exists", async () => {
+        await expect(getRequest("/org/foo/bar/teams/baz")).rejects.toThrow(
+          'Org "bar" is not found.'
+        );
+      });
+
+      it("should always return plain object", async () => {
+        await expect(
+          postRequest("/org/foo", { name: "bar" })
+        ).resolves.toBeTruthy();
+
+        await expect(getRequest("/org/foo/bar/teams/baz")).resolves.toEqual({});
+      });
     });
   });
 
   describe("/org/:adminId/:orgSlug/members", () => {
     describe("POST /org/:adminId/:orgSlug/members", () => {
-      // TODO: Implement with `addOrgMember`
+      it("should throw if org not exists", async () => {
+        await expect(
+          postRequest("/org/foo/bar/members", { memberId: "baz" })
+        ).rejects.toThrow('Org "bar" is not found.');
+      });
+
+      it("should add user to organization", async () => {
+        await expect(
+          postRequest("/org/foo", { name: "bar" })
+        ).resolves.toBeTruthy();
+
+        await expect(
+          postRequest("/org/foo/bar/members", { memberId: "baz" })
+        ).resolves.toEqual({
+          id: "baz"
+        });
+
+        await expect(getRequest("/org/foo/bar/members/baz")).resolves.toEqual({
+          id: "baz"
+        });
+      });
+
+      it("should throw if user already in organization", async () => {
+        await expect(
+          postRequest("/org/foo", { name: "bar" })
+        ).resolves.toBeTruthy();
+
+        await expect(
+          postRequest("/org/foo/bar/members", { memberId: "baz" })
+        ).resolves.toEqual({
+          id: "baz"
+        });
+
+        await expect(
+          postRequest("/org/foo/bar/members", { memberId: "baz" })
+        ).rejects.toThrow('Member "baz" already in org "bar".');
+      });
+
+      it("should add user to organization with teams", async () => {
+        await expect(
+          postRequest("/org/foo", { name: "bar" })
+        ).resolves.toBeTruthy();
+
+        await expect(
+          postRequest("/org/foo/bar/members", {
+            memberId: "baz",
+            teams: ["quoz", "noop"]
+          })
+        ).resolves.toEqual({
+          id: "baz"
+        });
+
+        await expect(getRequest("/org/foo/bar/teams")).resolves.toEqual({
+          noop: { baz: true },
+          quoz: { baz: true }
+        });
+
+        await expect(getRequest("/org/foo/bar/teams/quoz")).resolves.toEqual({
+          baz: true
+        });
+
+        await expect(getRequest("/org/foo/bar/teams/noop")).resolves.toEqual({
+          baz: true
+        });
+      });
     });
 
     describe("GET /org/:adminId/:orgSlug/members", () => {
@@ -93,7 +181,7 @@ describe("Controllers", () => {
         );
       });
 
-      it.only("should throw if org member not exists", async () => {
+      it("should throw if org member not exists", async () => {
         await expect(
           postRequest("/org/foo", { name: "bar" })
         ).resolves.toBeTruthy();

@@ -59,6 +59,48 @@ app.post("/org/:adminId", async (req, res, next) => {
   }
 });
 
+app.get("/org/:adminId/:orgSlug/teams", async (req, res, next) => {
+  const adminId = req.params.adminId;
+  const orgSlug = req.params.orgSlug;
+
+  try {
+    const list = await listOrgTeams(adminId, orgSlug);
+
+    res.json(list);
+  } catch (e) {
+    next(e);
+  }
+});
+
+app.get("/org/:adminId/:orgSlug/teams/:teamSlug", async (req, res, next) => {
+  const adminId = req.params.adminId;
+  const orgSlug = req.params.orgSlug;
+  const teamSlug = req.params.teamSlug;
+
+  try {
+    const list = await listOrgTeamMembers(adminId, orgSlug, teamSlug);
+
+    res.json(list);
+  } catch (e) {
+    next(e);
+  }
+});
+
+app.post("/org/:adminId/:orgSlug/members", async (req, res, next) => {
+  const adminId = req.params.adminId;
+  const orgSlug = req.params.orgSlug;
+  const memberId = req.body.memberId;
+  const teams = req.body.teams;
+
+  try {
+    const member = await addOrgMember(adminId, orgSlug, memberId, teams);
+
+    res.json(member);
+  } catch (e) {
+    next(e);
+  }
+});
+
 app.get("/org/:adminId/:orgSlug/members/:memberId", async (req, res, next) => {
   const adminId = req.params.adminId;
   const orgSlug = req.params.orgSlug;
