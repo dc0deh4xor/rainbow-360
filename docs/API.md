@@ -25,3 +25,18 @@ Response: `{ name: string }`
 Request: `DELETE /org/:adminId/:orgSlug`
 
 Response: `""`
+
+### Organization Teams
+
+#### List Organization Teams
+
+Request: `GET /org/:adminId/:orgSlug/teams`
+
+Response: `{ [teamSlug: string]: { [userId: string]: true }  }`
+
+#### List Organization Team Users
+
+Request: `GET /org/:adminId/:orgSlug/teams`
+
+Response: `{ [teamSlug: string]: true }`
+
