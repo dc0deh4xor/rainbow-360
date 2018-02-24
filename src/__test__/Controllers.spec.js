@@ -1,9 +1,9 @@
 const axios = require("axios");
-const { flushTestRepo } = require("../Services");
 
 afterEach(async () => {
   await getRequest("/flush");
 });
+
 function getRequest(url) {
   return axios
     .get(`http://localhost:8080${url}`)
@@ -50,6 +50,10 @@ describe("Controllers", () => {
       });
     });
 
+    describe("GET /org/:adminId", () => {
+      // TODO: Implement with `listOrgs`
+    });
+
     describe("GET /org/:adminId/:orgSlug", () => {
       it("should throw if org is not found", async () => {
         await expect(getRequest("/org/foo/bar")).rejects.toThrow(
@@ -57,23 +61,45 @@ describe("Controllers", () => {
         );
       });
     });
+
+    describe("DELETE /org/:adminId/:orgSlug", () => {
+      // TODO: Implement with `removeOrg`
+    });
   });
 
-  describe("/org/members/:orgId", () => {
-    describe("POST /org/members/:orgId { id, teams: [{ slug }] }", () => {
-      it("should add user to organization", async () => {});
+  describe("/org/:adminId/:orgSlug/teams", () => {
+    describe("GET /org/:adminId/:orgSlug/teams", () => {
+      // TODO: Implement with `listOrgTeams`
     });
 
-    describe("GET /org/members/:orgId", () => {
-      it("should return users of organization", () => {});
+    describe("GET /org/:adminId/:orgSlug/teams/:teamSlug", () => {
+      // TODO: Implement with `listOrgTeamMembers`
+    });
+  });
+
+  describe("/org/:adminId/:orgSlug/members", () => {
+    describe("POST /org/:adminId/:orgSlug/members", () => {
+      // TODO: Implement with `addOrgMember`
     });
 
-    describe("PUT /org/members/:orgId/:userId/teams [{ slug }]", () => {
-      it("should update user in organization", () => {});
+    describe("GET /org/:adminId/:orgSlug/members", () => {
+      // TODO: Implement with `listOrgMembers`
     });
 
-    describe("DELETE /org/members/:orgId/:userId", () => {
-      it("should remove user from organization", () => {});
+    describe("GET /org/:adminId/:orgSlug/members/:memberId", () => {
+      // TODO: Implement with `getOrgMember`
+    });
+
+    describe("DELETE /org/:adminId/:orgSlug/members/:memberId", () => {
+      // TODO: Implement with `removeOrgMember`
+    });
+
+    describe("GET /org/:adminId/:orgSlug/members/:memberId/teams", () => {
+      // TODO: Implement with `listOrgTeamMembers`
+    });
+
+    describe("PUT /org/:adminId/:orgSlug/members/:memberId/teams", () => {
+      // TODO: Implement with `updateOrgMemberTeams`
     });
   });
 });
