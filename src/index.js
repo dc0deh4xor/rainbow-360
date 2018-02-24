@@ -34,6 +34,17 @@ if (process.env.NODE_ENV === "test") {
   });
 }
 
+app.get("/org/:adminId", async (req, res, next) => {
+    const id = req.params.adminId;
+
+    try {
+        const list = await listOrgs(id);
+        res.json(list);
+    } catch (e) {
+        next(e);
+    }
+});
+
 app.get("/org/:adminId/:orgSlug", async (req, res, next) => {
   const id = req.params.adminId;
   const orgSlug = req.params.orgSlug;
@@ -57,6 +68,19 @@ app.post("/org/:adminId", async (req, res, next) => {
   } catch (e) {
     next(e);
   }
+});
+
+app.delete("/org/:adminId/:orgSlug", async (req, res, next) => {
+    const id = req.params.adminId;
+    const orgSlug = req.params.orgSlug;
+
+    try {
+        const list = await removeOrg(id, orgSlug);
+
+        res.json(list);
+    } catch (e) {
+        next(e);
+    }
 });
 
 app.get("/org/:adminId/:orgSlug/teams", async (req, res, next) => {
@@ -128,6 +152,20 @@ app.get("/org/:adminId/:orgSlug/members/:memberId", async (req, res, next) => {
   }
 });
 
+app.get("/org/:adminId/:orgSlug/members/:memberId/teams", async (req, res, next) => {
+    const adminId = req.params.adminId;
+    const orgSlug = req.params.orgSlug;
+    const memberId = req.params.memberId;
+
+    try {
+        const member = await listOrgTeamMembers(adminId, orgSlug, memberId);
+
+        res.json(member);
+    } catch (e) {
+        next(e);
+    }
+});
+
 app.delete(
   "/org/:adminId/:orgSlug/members/:memberId",
   async (req, res, next) => {
@@ -144,6 +182,20 @@ app.delete(
     }
   }
 );
+
+app.put("/org/:adminId/:orgSlug/members/:memberId/teams", async (req, res, next) =>{
+    const adminId = req.params.adminId;
+    const orgSlug = req.params.orgSlug;
+    const memberId = req.params.memberId;
+    const teams = req.body;
+    try {
+        const member = await updateOrgMemberTeams(adminId, orgSlug, memberId, teams);
+
+        res.json(member);
+    } catch (e) {
+        next(e);
+    }
+});
 
 app.listen(8080, httpServerError => {
   if (httpServerError) {

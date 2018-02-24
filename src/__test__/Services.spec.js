@@ -218,7 +218,6 @@ describe("Services", () => {
     it("should throw if teams is invalid object", async () => {
       await expect(createOrg("foo", "bar")).resolves.toBeTruthy();
       await expect(addOrgMember("foo", "bar", "baz")).resolves.toBeTruthy();
-
       await expect(updateOrgMemberTeams("foo", "bar", "baz")).rejects.toThrow(
         'Invalid org member "teams" value.'
       );

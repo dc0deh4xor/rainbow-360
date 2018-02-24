@@ -28,6 +28,14 @@ function deleteRequest(url) {
       throw new Error(e.response.data.message);
     });
 }
+function putRequest(url, body) {
+    return axios
+        .put(`http://localhost:8080${url}`, body)
+        .then(x => x.data)
+        .catch(e => {
+            throw new Error(e.response.data.message);
+        });
+}
 
 describe("Controllers", () => {
   describe("/org", () => {
@@ -51,7 +59,22 @@ describe("Controllers", () => {
     });
 
     describe("GET /org/:adminId", () => {
-      // TODO: Implement with `listOrgs`
+        it("should return plain object", async () => {
+            await expect(getRequest("/org/foo")).resolves.toEqual({});
+        });
+        it("should return values", async () => {
+            await expect(postRequest("/org/foo", { name: "bar" })).resolves.toBeTruthy();
+            await expect(postRequest("/org/foo", { name: "baz" })).resolves.toBeTruthy();
+            await expect(postRequest("/org/foo", { name: "noop" })).resolves.toBeTruthy();
+            await expect(postRequest("/org/foo", { name: "quoz" })).resolves.toBeTruthy();
+
+            await expect(getRequest("/org/foo")).resolves.toEqual({
+                bar: { slug: "bar" },
+                baz: { slug: "baz" },
+                noop: { slug: "noop" },
+                quoz: { slug: "quoz" }
+            });
+        });
     });
 
     describe("GET /org/:adminId/:orgSlug", () => {
@@ -63,7 +86,19 @@ describe("Controllers", () => {
     });
 
     describe("DELETE /org/:adminId/:orgSlug", () => {
-      // TODO: Implement with `removeOrg`
+        it("should throw if org is not exist", async () => {
+            await expect(deleteRequest("/org/foo/bar")).rejects.toThrow(
+                'Org "bar" is not found.'
+            );
+        });
+
+        it("should remove org", async () => {
+            await expect(postRequest("/org/foo", { name: "bar" })).resolves.toBeTruthy();
+            await expect(deleteRequest("/org/foo/bar")).resolves.toBeFalsy();
+            await expect(getRequest("/org/foo/bar")).rejects.toThrow(
+                'Org "bar" is not found.'
+            );
+        });
     });
   });
 
@@ -263,11 +298,63 @@ describe("Controllers", () => {
     });
 
     describe("GET /org/:adminId/:orgSlug/members/:memberId/teams", () => {
-      // TODO: Implement with `listOrgTeamMembers`
+        it("should throw if org not exists", async () => {
+            await expect(getRequest("/org/foo/bar/members/baz/teams")).rejects.toThrow(
+                'Org "bar" is not found.'
+            );
+        });
+
+        it("should always return plain object", async () => {
+            await expect(postRequest("/org/foo", { name: "bar" })).resolves.toBeTruthy();
+            await expect(getRequest("/org/foo/bar/members/baz/teams")).resolves.toEqual(
+                {}
+            );
+        });
     });
 
     describe("PUT /org/:adminId/:orgSlug/members/:memberId/teams", () => {
-      // TODO: Implement with `updateOrgMemberTeams`
+        it("should throw if org not exists", async () => {
+            await expect(
+                putRequest("/org/foo/bar/members/baz/teams", [])
+            ).rejects.toThrow('Org "bar" is not found.');
+        });
+
+        it("should throw if org member not exists", async () => {
+            await expect(postRequest("/org/foo", { name: "bar" })).resolves.toBeTruthy();
+            await expect(putRequest("/org/foo/bar/members/baz/teams")).rejects.toThrow(
+                'Member "baz" not found in org "bar".'
+            );
+        });
+
+        it("should throw if teams is invalid object", async () => {
+            await expect(postRequest("/org/foo", { name: "bar" })).resolves.toBeTruthy();
+            await expect(postRequest("/org/foo/bar/members",{id: "baz"})).resolves.toBeTruthy();
+
+            await expect(putRequest("/org/foo/bar/members/baz/teams")).rejects.toThrow(
+                'Invalid org member "teams" value.'
+            );
+        });
+
+        it("should update member teams", async () => {
+            await expect(postRequest("/org/foo", { name: "bar" })).resolves.toBeTruthy();
+            await expect(
+                postRequest("/org/foo/bar/members", {id: "baz",teams: ["quoz", "noop"]})
+            ).resolves.toBeTruthy();
+
+            await expect(getRequest("/org/foo/bar/teams")).resolves.toEqual({
+                noop: { baz: true },
+                quoz: { baz: true }
+            });
+
+            await expect(
+                putRequest("/org/foo/bar/members/baz/teams", ["loop", "boop"])
+            ).resolves.toBe("");
+
+            await expect(getRequest("/org/foo/bar/teams")).resolves.toEqual({
+                loop: { baz: true },
+                boop: { baz: true }
+            });
+        });
     });
   });
 });
