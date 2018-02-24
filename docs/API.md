@@ -70,3 +70,9 @@ Request: `DELETE /org/:adminId/:orgSlug/members/:memberId`
 
 Response: `""`
 
+#### Update Organization Member Teams
+
+Request: `PUT /org/:adminId/:orgSlug/members/:memberId/teams` ▶︎ `Array<string>`
+
+Response: `""`
+
