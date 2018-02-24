@@ -200,9 +200,13 @@ app.put("/org/:adminId/:orgSlug/members/:memberId/teams", async (req, res, next)
 app.listen(8080, httpServerError => {
   if (httpServerError) {
     console.error(httpServerError);
+  } else {
+    console.log('Server Run at port 8080')
   }
 });
 
 app.use((error, req, res, next) => {
+  console.log(error.stack);
+
   res.status(500).json({ message: error.message });
 });
