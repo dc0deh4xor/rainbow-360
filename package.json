@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "D:0.0.1 Test Service",
   "main": "src/index.js",
+  "jest": {
+    "transform": {}
+  },
   "scripts": {
     "test": "jest",
     "format": "prettier --write \"src/**/*.js\""
