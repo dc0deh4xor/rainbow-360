@@ -8,50 +8,52 @@ admin.initializeApp({
 
 const REPO_PREFIX = process.env.NODE_ENV === "text" ? Math.random() : "dev";
 
-function getOrgUrl(adminId, slug) {
+function getOrgUrl(adminId, orgSlug) {
   const url = `${REPO_PREFIX}/orgs/${adminId}`;
 
-  if (slug) {
-    return `${url}/${slug}`;
+  if (orgSlug) {
+    return `${url}/${orgSlug}`;
   }
 
   return url;
 }
 
-async function getOrg(adminId, slug) {
+async function getOrg(adminId, orgSlug) {
   const org = await admin
     .database()
-    .ref(getOrgUrl(adminId, slug))
+    .ref(getOrgUrl(adminId, orgSlug))
     .once("value");
 
   const value = org.val();
 
   if (!value) {
-    throw new Error(`Org "${slug}" is not found.`);
+    throw new Error(`Org "${orgSlug}" is not found.`);
   }
 
   return value;
 }
 
-async function createOrg(adminId, slug) {
-  const org = await getOrg(adminId, slug).catch(() => null);
+async function createOrg(adminId, orgSlug) {
+  const org = await getOrg(adminId, orgSlug).catch(() => null);
 
   if (org) {
-    throw new Error(`Org "${slug}" already exists.`);
+    throw new Error(`Org "${orgSlug}" already exists.`);
   }
 
   await admin
     .database()
-    .ref(getOrgUrl(adminId, slug))
-    .set({ slug });
+    .ref(getOrgUrl(adminId, orgSlug))
+    .set({ slug: orgSlug });
+
+
 }
 
-async function removeOrg(adminId, slug) {
-  await getOrg(adminId, slug);
+async function removeOrg(adminId, orgSlug) {
+  await getOrg(adminId, orgSlug);
 
   await admin
     .database()
-    .ref(getOrgUrl(adminId, slug))
+    .ref(getOrgUrl(adminId, orgSlug))
     .set(null);
 }
 
