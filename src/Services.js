@@ -40,12 +40,14 @@ async function createOrg(adminId, orgSlug) {
     throw new Error(`Org "${orgSlug}" already exists.`);
   }
 
+  const value = { slug: orgSlug };
+
   await admin
     .database()
     .ref(getOrgUrl(adminId, orgSlug))
-    .set({ slug: orgSlug });
+    .set(value);
 
-
+  return value;
 }
 
 async function removeOrg(adminId, orgSlug) {

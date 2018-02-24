@@ -21,12 +21,12 @@ describe("Services", () => {
 
   describe("createOrg", () => {
     it("should create organization", async () => {
-      await expect(createOrg("foo", "bar")).resolves.toBeFalsy();
+      await expect(createOrg("foo", "bar")).resolves.toEqual({ slug: "bar" });
       await expect(getOrg("foo", "bar")).resolves.toEqual({ slug: "bar" });
     });
 
     it("should throw if org already exists", async () => {
-      await expect(createOrg("foo", "bar")).resolves.toBeFalsy();
+      await expect(createOrg("foo", "bar")).resolves.toEqual({ slug: "bar" });
       await expect(createOrg("foo", "bar")).rejects.toThrow(
         'Org "bar" already exists.'
       );
@@ -41,7 +41,7 @@ describe("Services", () => {
     });
 
     it("should remove org", async () => {
-      await expect(createOrg("foo", "bar")).resolves.toBeFalsy();
+      await expect(createOrg("foo", "bar")).resolves.toBeTruthy();
       await expect(removeOrg("foo", "bar")).resolves.toBeFalsy();
       await expect(getOrg("foo", "bar")).rejects.toThrow(
         'Org "bar" is not found.'
@@ -55,10 +55,10 @@ describe("Services", () => {
     });
 
     it("should return values", async () => {
-      await expect(createOrg("foo", "bar")).resolves.toBeFalsy();
-      await expect(createOrg("foo", "baz")).resolves.toBeFalsy();
-      await expect(createOrg("foo", "quoz")).resolves.toBeFalsy();
-      await expect(createOrg("foo", "noop")).resolves.toBeFalsy();
+      await expect(createOrg("foo", "bar")).resolves.toBeTruthy();
+      await expect(createOrg("foo", "baz")).resolves.toBeTruthy();
+      await expect(createOrg("foo", "quoz")).resolves.toBeTruthy();
+      await expect(createOrg("foo", "noop")).resolves.toBeTruthy();
 
       await expect(listOrgs("foo")).resolves.toEqual({
         bar: { slug: "bar" },
