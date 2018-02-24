@@ -7,7 +7,7 @@
     "transform": {}
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --no-cache",
     "format": "prettier --write \"src/**/*.js\""
   },
   "repository": {
