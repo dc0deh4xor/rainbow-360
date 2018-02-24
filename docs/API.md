@@ -38,7 +38,7 @@ Response: `{ [teamSlug: string]: { [userId: string]: true } }`
 
 #### List Organization Team Users
 
-Request: `GET /org/:adminId/:orgSlug/teams`
+Request: `GET /org/:adminId/:orgSlug/teams/:teamSlug`
 
 Response: `{ [teamSlug: string]: true }`
 
