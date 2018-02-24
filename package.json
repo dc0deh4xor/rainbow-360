@@ -4,7 +4,8 @@
   "description": "D:0.0.1 Test Service",
   "main": "src/index.js",
   "scripts": {
-    "test": "npm t"
+    "test": "jest",
+    "format": "prettier --write \"src/**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,15 @@
   "bugs": {
     "url": "https://github.com/dc0deh4xor/rainbow-360/issues"
   },
-  "homepage": "https://github.com/dc0deh4xor/rainbow-360#readme"
+  "homepage": "https://github.com/dc0deh4xor/rainbow-360#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "firebase": "^4.10.1"
+  },
+  "devDependencies": {
+    "axios": "^0.18.0",
+    "jest": "^22.4.2",
+    "prettier": "^1.10.2"
+  }
 }
