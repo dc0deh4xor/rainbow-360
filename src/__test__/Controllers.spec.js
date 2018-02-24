@@ -22,7 +22,7 @@ function postRequest(url, body) {
 }
 function deleteRequest(url) {
   return axios
-    .get(`http://localhost:8080${url}`)
+    .delete(`http://localhost:8080${url}`)
     .then(x => x.data)
     .catch(e => {
       throw new Error(e.response.data.message);
@@ -223,7 +223,43 @@ describe("Controllers", () => {
     });
 
     describe("DELETE /org/:adminId/:orgSlug/members/:memberId", () => {
-      // TODO: Implement with `removeOrgMember`
+      it("should throw if org not exists", async () => {
+        await expect(deleteRequest("/org/foo/bar/members/baz")).rejects.toThrow(
+          'Org "bar" is not found.'
+        );
+      });
+
+      it("should throw if org member not exists", async () => {
+        await expect(
+          postRequest("/org/foo", { name: "bar" })
+        ).resolves.toBeTruthy();
+        await expect(deleteRequest("/org/foo/bar/members/baz")).rejects.toThrow(
+          'Member "baz" not found in org "bar".'
+        );
+      });
+
+      it("should remove org member", async () => {
+        await expect(
+          postRequest("/org/foo", { name: "bar" })
+        ).resolves.toBeTruthy();
+        await expect(
+          postRequest("/org/foo/bar/members", {
+            id: "baz",
+            teams: ["quoz", "noop"]
+          })
+        ).resolves.toBeTruthy();
+
+        await expect(getRequest("/org/foo/bar/teams")).resolves.toEqual({
+          noop: { baz: true },
+          quoz: { baz: true }
+        });
+
+        await expect(deleteRequest("/org/foo/bar/members/baz")).resolves.toBe(
+          ""
+        );
+
+        await expect(getRequest("/org/foo/bar/teams")).resolves.toEqual({});
+      });
     });
 
     describe("GET /org/:adminId/:orgSlug/members/:memberId/teams", () => {

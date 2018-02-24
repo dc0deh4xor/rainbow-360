@@ -128,6 +128,23 @@ app.get("/org/:adminId/:orgSlug/members/:memberId", async (req, res, next) => {
   }
 });
 
+app.delete(
+  "/org/:adminId/:orgSlug/members/:memberId",
+  async (req, res, next) => {
+    const adminId = req.params.adminId;
+    const orgSlug = req.params.orgSlug;
+    const memberId = req.params.memberId;
+
+    try {
+      const member = await removeOrgMember(adminId, orgSlug, memberId);
+
+      res.json(member);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
 app.listen(8080, httpServerError => {
   if (httpServerError) {
     console.error(httpServerError);
