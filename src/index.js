@@ -18,19 +18,16 @@ const {
   flushTestRepo
 } = require("./Services");
 
-app.use(express.static("public"));
 app.use(bodyParser.json()); // to support JSON-encoded bodies
-app.use(
-  bodyParser.urlencoded({
-    // to support URL-encoded bodies
-    extended: true
-  })
-);
 
 if (process.env.NODE_ENV === "test") {
-  app.use("/flush", async (req, res, next) => {
-    await flushTestRepo();
-    res.send("OK !!!!!!!!!");
+  app.use("/flush", async (req, res) => {
+    try {
+      await flushTestRepo();
+      res.json({ ok: true });
+    } catch (e) {
+      res.json({ ok: false });
+    }
   });
 }
 
