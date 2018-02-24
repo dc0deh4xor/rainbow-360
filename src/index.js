@@ -67,7 +67,9 @@ app.put("/org/members/:orgId/:userId", async (req, res) => {});
 app.delete("/org/members/:orgId/:userId", async (req, res) => {});
 
 app.listen(8080, httpServerError => {
-  console.error(httpServerError);
+  if (httpServerError) {
+    console.error(httpServerError);
+  }
 });
 
 app.use((error, req, res, next) => {
