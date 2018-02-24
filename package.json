@@ -1,0 +1,22 @@
+{
+  "name": "rainbow-360",
+  "version": "0.0.1",
+  "description": "D:0.0.1 Test Service",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "npm t"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dc0deh4xor/rainbow-360.git"
+  },
+  "keywords": [
+    "index"
+  ],
+  "author": "NODE BOIZ",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dc0deh4xor/rainbow-360/issues"
+  },
+  "homepage": "https://github.com/dc0deh4xor/rainbow-360#readme"
+}
