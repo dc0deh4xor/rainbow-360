@@ -89,11 +89,24 @@ app.get("/org/:adminId/:orgSlug/teams/:teamSlug", async (req, res, next) => {
 app.post("/org/:adminId/:orgSlug/members", async (req, res, next) => {
   const adminId = req.params.adminId;
   const orgSlug = req.params.orgSlug;
-  const memberId = req.body.memberId;
+  const memberId = req.body.id;
   const teams = req.body.teams;
 
   try {
     const member = await addOrgMember(adminId, orgSlug, memberId, teams);
+
+    res.json(member);
+  } catch (e) {
+    next(e);
+  }
+});
+
+app.get("/org/:adminId/:orgSlug/members", async (req, res, next) => {
+  const adminId = req.params.adminId;
+  const orgSlug = req.params.orgSlug;
+
+  try {
+    const member = await listOrgMembers(adminId, orgSlug);
 
     res.json(member);
   } catch (e) {
