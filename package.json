@@ -6,6 +6,9 @@
   "jest": {
     "transform": {}
   },
+  "nodemonConfig": {
+    "ignore": ["src/**/*.spec.js"]
+  },
   "scripts": {
     "start": "cross-env NODE_ENV=test nodemon src/index.js",
     "test": "jest --env=node",
